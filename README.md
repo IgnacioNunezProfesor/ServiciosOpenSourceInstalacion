@@ -65,3 +65,10 @@ meet.sansebastia.org
 
 Nos pide Configuración de jitsi-meet-web-config
 Elegimos Crear un certificado autofirmado
+
+
+```bash
+sudo systemctl restart prosody
+sudo systemctl restart jicofo
+sudo systemctl restart jitsi-videobridge2
+```
