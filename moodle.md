@@ -1,4 +1,4 @@
-# Guía de Instalación de Moodle en Ubuntu 24.04
+# Guía de Instalación de Moodle en Ubuntu 22.04
 
 ## Requisitos Previos
 
@@ -60,7 +60,7 @@ EXIT;
 
 ```bash
 cd /var/www
-sudo git clone git://git.moodle.org/moodle.git
+sudo git clone https://github.com/moodle/moodle.git
 ```
 
 ## Paso 7: Configurar Moodle
@@ -74,6 +74,7 @@ sudo git checkout MOODLE_404_STABLE
 ## Paso 8: Configurar Permisos
 
 ```bash
+sudo mkdir /var/moodledata
 sudo chown -R www-data:www-data /var/moodledata
 sudo chmod -R 775 /var/moodledata 
 ```
@@ -93,6 +94,7 @@ Agrega lo siguiente:
     ServerAdmin admin@example.com
     DocumentRoot /var/www/moodle
     ServerName your_domain.com
+    ServerAlias www.your_domain.com
 
     <Directory /var/www/moodle>
         Options Indexes FollowSymLinks
