@@ -4,11 +4,11 @@
 
 Antes de comenzar, asegúrate de tener los siguientes requisitos:
 
-- Un servidor Ubuntu 24.04.
+- Un servidor Ubuntu 22.04.
 - Acceso a la terminal con privilegios de sudo.
 - Un servidor web (Apache o Nginx).
 - PHP y extensiones necesarias.
-- Base de datos (MySQL o PostgreSQL).
+- Base de datos (MySQL, PostgreSQL, MariaDB ...).
 
 ## Paso 1: Actualizar el Sistema
 
