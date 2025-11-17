@@ -26,9 +26,13 @@ sudo apt install -y nodejs
 
 ### 4. Instalar MongoDB
 ```bash
-sudo apt install -y mongodb-server
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list 
+sudo apt update 
+sudo apt install -y mongodb-org
 sudo systemctl start mongodb
 sudo systemctl enable mongodb
+sudo systemctl status mongod 
 ```
 
 ### 5. Descargar Rocket.Chat
