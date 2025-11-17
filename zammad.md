@@ -2,10 +2,10 @@
 
 ## Requisitos previos
 - Ubuntu 24.04 LTS
-- Mínimo 4GB RAM
+- Mínimo 6GB o 10GB RAM si quieres Elasticsearch en el mismo servidor
 - 2 CPUs
 - 20GB espacio en disco
-- Privilegios de superusuario
+- Privilegios de superusuario (sudo)
 
 ## Pasos de instalación
 
@@ -13,6 +13,16 @@
 ```bash
 sudo apt update
 sudo apt upgrade -y
+```
+
+### Configuración de firewall (opcional si nos falla el comando)
+
+Si tu Ubuntu tiene UFW activo, asegúrate de permitir el tráfico HTTP y HTTPS para que la interfaz web de Zammad sea accesible:
+
+```bash
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw reload
 ```
 
 ### 2. Instalar dependencias
