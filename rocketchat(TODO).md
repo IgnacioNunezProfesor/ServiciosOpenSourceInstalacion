@@ -89,7 +89,7 @@ sudo systemctl enable rocketchat
 sudo systemctl status rocketchat
 ```
 
-### 10. Instalar
+### 10. Instalar Nginx
 ```bash
 sudo apt install -y nginx
 sudo ufw allow 'Nginx Full'
