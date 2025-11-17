@@ -39,6 +39,7 @@ Instalar paquetes básicos:
 ```bash
 # desde cuenta root o con sudo
 sudo apt install -y python3 python3-dev python3-pip python3-venv build-essential \
+sudo apt-get install redis-server
 redis-server mariadb-server libmariadb-dev-compat libmariadb-dev \
 nodejs npm yarn gettext git curl
 ```
