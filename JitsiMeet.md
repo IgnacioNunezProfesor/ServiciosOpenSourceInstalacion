@@ -5,8 +5,8 @@ Este repositorio servirá para documentar la instalación y puesta en funcionami
 ## Requerimientos iniciales
 
 * **Ubuntu Server 24.04**
-* **RAM:** more than 8GB
-* **CPU:** Para un servidor básico, 4 núcleos sería suficiente
+* **RAM:** 8GB o más.
+* **CPU:** Para un servidor básico, 4 núcleos sería suficiente.
 * **Espacio en disco:** al menos 20GB de espacio disponble en discos SSD.
 
 ## Pasos de preparación de requisitos
