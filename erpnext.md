@@ -19,13 +19,17 @@ sudo locale-gen en_US.UTF-8
 
 Crear un usuario dedicado (recomendado):
 ```bash
-sudo adduser --disabled-login --gecos "" frappe
-sudo usermod -aG sudo frappe
+sudo adduser frappe
+usermod -aG sudo frappe
 ```
 
 (Trabaja como ese usuario para la mayoría de comandos)
 ```bash
 sudo su - frappe
+```
+(Entramos en el home del usuario)
+```bash
+cd /home/frappe
 ```
 
 ---
