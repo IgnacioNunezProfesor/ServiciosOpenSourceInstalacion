@@ -15,6 +15,16 @@ sudo apt update
 sudo apt upgrade -y
 ```
 
+### Configuración de firewall (opcional si nos falla el comando)
+
+Si tu Ubuntu tiene UFW activo, asegúrate de permitir el tráfico HTTP y HTTPS para que la interfaz web de Zammad sea accesible:
+
+```bash
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw reload
+```
+
 ### 2. Instalar dependencias
 ```bash
 sudo apt install wget apt-transport-https gnupg2 -y
