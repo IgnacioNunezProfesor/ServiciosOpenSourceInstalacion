@@ -45,9 +45,10 @@ Si vas a usar MySQL/MariaDB, asegúrate de configurarlo y crear la base de datos
 Ghost requiere una versión compatible de Node.js. Aquí instalamos la última disponble:
 
 ```bash
-NODE_MAJOR=22
+NODE_MAJOR=20
 curl -sL https://deb.nodesource.com/setup_$NODE_MAJOR.x -o nodesource_setup.sh
 bash nodesource_setup.sh
+sudo apt install -y nodejs
 
 node -v
 npm -v
