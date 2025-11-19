@@ -104,7 +104,35 @@ cd taiga-front-dist
 ```
 El front-dist ya está compilado; Nginx servirá los archivos estáticos de esta carpeta.
 
-9) Systemd: Gunicorn (backend) y Celery
+9) Instalar Taiga-Events 
+Instalar Node.js/Clonar taiga-events e instalar dependencias/Crear archivo de configuración para taiga-events
+```
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo -u taiga -H bash -lc '
+cd ~
+git clone https://github.com/taigaio/taiga-events.git
+cd taiga-events
+npm install
+#Crear archivo /home/taiga/taiga-events/config.json Ejemplo:
+{
+  "secret": "pon_una_secret_key_para_events",
+  "url": "amqp://guest:guest@localhost:5672/taiga",
+  "webSocketServer": {
+    "port": 8888,
+    "host": "127.0.0.1"
+  }
+}
+#Añadir en /home/taiga/taiga-back/settings/local.py
+TAIGA_EVENTS_SECRET = "pon_una_secret_key_para_events"
+
+EVENTS_PUSH_BACKEND = "taiga.events.backends.rabbitmq.EventsPushBackend"
+EVENTS_PUSH_BACKEND_OPTIONS = {
+    "url": "amqp://guest:guest@localhost:5672/taiga"
+}
+```
+
+10) Systemd: Gunicorn (backend) y Celery
 Crear directorio socket y logs, cambiar propietario:
 ```
 sudo mkdir -p /run/taiga
@@ -142,7 +170,7 @@ sudo systemctl enable --now taiga.service
 sudo systemctl enable --now taiga-celery.service taiga-celerybeat.service
 ```
 
-10) Nginx: proxy y servir front / media / static
+11) Nginx: proxy y servir front / media / static
 Ejemplo de bloque de servidor `/etc/nginx/sites-available/taiga`:
 ```
 server {
@@ -188,13 +216,13 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-11) HTTPS con Certbot
+12) HTTPS con Certbot
 ```
 sudo certbot --nginx -d taiga.example.com
 # sigue las instrucciones para obtener cert
 ```
 
-12) Comprobaciones finales
+13) Comprobaciones finales
 - Visita https://taiga.example.com
 - Inicia sesión con el superusuario creado
 - Revisa logs si algo falla:
