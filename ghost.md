@@ -42,7 +42,7 @@ Si vas a usar MySQL/MariaDB, asegúrate de configurarlo y crear la base de datos
 
 ## 4. Instalar Node.js (versión recomendada)
 
-Ghost requiere una versión compatible de Node.js. Aquí instalamos la ultima que nos sea disponible:
+Ghost requiere una versión compatible de Node.js. Aquí instalamos la última disponble pero que sea compatible:
 
 ```bash
 NODE_MAJOR=20
