@@ -163,8 +163,14 @@ sudo systemctl reload nginx
 ## Paso 10 — SSL (recomendado)
 
 ```bash
+# Para Apache
 sudo apt install -y certbot python3-certbot-apache
-sudo certbot --apache -d tu-dominio
+sudo certbot --apache -d tu-dominio --redirect
+
+# Para Nginx
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d tu-dominio --redirect
+
 ```
 
 ## Paso 11 — Tareas programadas y colas
