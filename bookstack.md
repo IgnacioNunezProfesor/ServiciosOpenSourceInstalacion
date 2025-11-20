@@ -103,7 +103,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ## 6) Habilitar HTTPS (Let’s Encrypt)
 ```bash
-sudo certbot --nginx -d tu-dominio.com
+sudo certbot --nginx -d tu-dominio.com -d www.tu-dominio.com
 ```
 
 ## 7) Configurar worker (opcional, recomendado para emails/colas)
