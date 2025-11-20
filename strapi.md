@@ -15,7 +15,7 @@ Resumen rápido: guía para instalar Strapi (v4+) en Ubuntu 24.04, desde un ento
 ## 1) Actualizar sistema e instalar utilidades
 ```bash
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y curl git build-essential python3 python3-pip
+sudo apt install -y curl git build-essential 
 ```
 
 ## 2) Instalar Node.js (recomendado: nvm)
