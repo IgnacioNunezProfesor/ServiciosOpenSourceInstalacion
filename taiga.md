@@ -236,7 +236,4 @@ Notas y buenas prácticas
 - Ajusta workers de Gunicorn según CPU/RAM.
 - Considera usar un entorno virtualizado/contenerizado (Docker) si prefieres despliegues reproducibles.
 
-Si quieres, te puedo generar:
-- el archivo local.py completo con placeholders,
-- el systemd unit file(s) listos para pegar,
-- o la configuración completa de Nginx adaptada a tu dominio y rutas concretas.
+
