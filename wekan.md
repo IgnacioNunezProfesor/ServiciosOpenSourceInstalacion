@@ -101,7 +101,7 @@ WorkingDirectory=/opt/wekan/bundle
 
 ExecStart=/usr/bin/node main.js
 
-Environment="PORT=8081"
+Environment="PORT=3000"
 Environment="ROOT_URL=http://<tu-IP>:3000"
 Environment="MONGO_URL=mongodb://localhost:27017/wekan"
 Environment="NODE_ENV=production"
