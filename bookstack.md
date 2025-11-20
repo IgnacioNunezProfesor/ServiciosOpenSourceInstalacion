@@ -96,6 +96,7 @@ server {
 ```
 Habilitar y recargar:
 ```bash
+sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/bookstack /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
