@@ -23,8 +23,10 @@ sudo apt install -y curl wget git build-essential
 ## Paso 3: Instalar Node.js y npm
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+source ~/.bashrc
+nvm install 14.21.3
+nvm use 14.21.3
 ```
 
 ## Paso 4: Instalar MongoDB
