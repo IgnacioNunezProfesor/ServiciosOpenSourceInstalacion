@@ -34,7 +34,7 @@ EXIT;
 ```bash
 sudo mkdir -p /var/www
 cd /var/www
-sudo git clone https://github.com/BookStackApp/BookStack.git bookstack
+sudo git clone https://github.com/BookStackApp/BookStack.git --branch=release --single-branch bookstack
 cd bookstack
 sudo composer install --no-dev --optimize-autoloader
 sudo cp .env.example .env
