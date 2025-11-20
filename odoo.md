@@ -27,6 +27,9 @@ sudo useradd -m -d /opt/odoo -U -r -s /bin/bash odoo
 ## 4. Instalar PostgreSQL
 ```bash
 sudo apt install postgresql -y
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+sudo systemctl status postgresql
 sudo su - postgres -c "createuser -s odoo"
 ```
 
