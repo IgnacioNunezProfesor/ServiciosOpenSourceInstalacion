@@ -1,18 +1,20 @@
-# Instalación completa de Matomo en Ubuntu 24.04 (guía paso a paso)
+# Instalación completa de Matomo en Ubuntu 22.04, aunque sea mas anitcuada es mas estable (guía paso a paso)
+
+## Correcion
 
 Resumen: esta guía instala Matomo usando Nginx + PHP-FPM + MariaDB en Ubuntu 24.04. Ajustar valores (dominio, usuario, versiones PHP) según el entorno.
 
-## 1) Prerrequisitos
+## 1 Prerrequisitos
 - Usuario con privilegios sudo.
 - Dominio apuntando al servidor (opcional para HTTPS).
 - Puerto 80/443 accesibles (UFW/Cloud rules).
 
-## 2) Actualizar sistema
+## 2 Actualizar sistema
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
-## 3) Instalar webserver, PHP y extensiones requeridas
+## 3 Instalar webserver, PHP y extensiones requeridas
 Instala la versión de PHP disponible en repositorios (o específ. cambiando `php` por `php8.x`).
 
 ```bash
@@ -25,7 +27,7 @@ ls /run/php       # verá algo como php8.2-fpm.sock
 ```
 Apuntar al socket correcto en la configuración de Nginx (ver sección de Nginx).
 
-## 4) Configurar MariaDB (crear base de datos y usuario)
+## 4 Configurar MariaDB (crear base de datos y usuario)
 Acceder a MariaDB y crear DB y usuario seguros:
 ```bash
 sudo mysql -u root
@@ -39,17 +41,21 @@ EXIT;
 ```
 Reemplazar `ContraseñaSegura` por una contraseña fuerte.
 
-## 5) Descargar e instalar Matomo
+## 5 Descargar e instalar Matomo
+
+Descargamos la última versión estable de Matomo y la instalamos en el directorio web:
+
 ```bash
 cd /var/www
 sudo wget https://downloads.matomo.org/matomo-latest.zip -O matomo.zip
-sudo unzip matomo.zip -d matomo
-sudo chown -R www-data:www-data matomo
-sudo chmod -R 755 matomo
+sudo unzip matomo.zip
+sudo mv matomo /var/www/matomo
+sudo chown -R www-data:www-data /var/www/matomo
+sudo chmod -R 750 /var/www/matomo
 rm matomo.zip
 ```
 
-## 6) Configurar Nginx (ejemplo de servidor)
+## 6 Configurar Nginx (ejemplo de servidor)
 Crear archivo de sitio, reemplazar `example.com` y `php_socket` por los valores reales (e.g., `/run/php/php8.2-fpm.sock`).
 
 ```bash
@@ -76,9 +82,15 @@ server {
         fastcgi_pass unix:/run/php/php_socket;
     }
 
+    # Archivos estáticos: cachear para mejorar rendimiento
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
         expires max;
         log_not_found off;
+    }
+
+    # Bloquear acceso a directorios sensibles
+    location ~ /(config|tmp|core|lang) {
+        deny all;
     }
 }
 EOF
@@ -86,11 +98,12 @@ EOF
 sudo ln -s /etc/nginx/sites-available/matomo.conf /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
+
 ```
 
 Asegurarse de sustituir `fastcgi_pass unix:/run/php/php_socket;` por el socket correcto (ej. `unix:/run/php/php8.2-fpm.sock`) o por `127.0.0.1:9000` si se usa TCP.
 
-## 7) Ajustes PHP (opcional pero recomendado)
+## 7 Ajustes PHP (opcional pero recomendado)
 Editar valores de php.ini / fpm según necesidades, por ejemplo aumentar memory_limit y max_execution_time:
 ```bash
 # encontrar php.ini
@@ -106,12 +119,12 @@ Luego reiniciar PHP-FPM:
 sudo systemctl restart php8.x-fpm   # ajustar versión
 ```
 
-## 8) Ejecutar el instalador web de Matomo
+## 8 Ejecutar el instalador web de Matomo
 Abrir en navegador: http://example.com (reemplazar por su dominio o IP).
 - Seguir el asistente web: verificará requisitos, proporcionará datos de DB (host: localhost, bd: matomo, usuario, contraseña) y creará el usuario administrador.
 - Finalizar instalación y anotar URL de panel.
 
-## 9) Tarea programada (archivado crons)
+## 9 Tarea programada (archivado crons)
 Matomo requiere ejecución periódica de archiving para reportes (si no usa Matomo Cloud). Crear cron para usuario www-data:
 
 ```bash
@@ -119,32 +132,52 @@ sudo crontab -u www-data -e
 ```
 Añadir línea (ajustar URL):
 ```
-*/5 * * * * /usr/bin/php /var/www/matomo/console core:archive --url=https://example.com >/dev/null 2>&1
-```
-Este ejemplo corre cada 5 minutos.
+0 * * * * /usr/bin/php /var/www/matomo/console core:archive --url=https://example.com >/dev/null 2>&1
 
-## 10) Habilitar HTTPS con Certbot (opcional recomendado)
+```
+En lugar de cada 5 minutos (*/5), se recomienda cada hora (0 * * * *) en entornos pequeños para reducir carga.
+
+Mantener la ruta absoluta de PHP y del comando console.
+
+## 10 Habilitar HTTPS con Certbot (opcional recomendado)
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d example.com
 ```
 
-## 11) Firewall
+## 11 Firewall
 Si usa UFW:
 ```bash
 sudo ufw allow 'Nginx Full'
 sudo ufw enable
 ```
 
-## 12) Verificación y mantenimiento
-- Acceder al panel de Matomo y comprobar recepción de datos.
-- Logs: /var/log/nginx/, /var/www/matomo/tmp/logs/
-- Actualizar Matomo periódicamente desde la interfaz o manualmente.
-- Hacer copias de seguridad de /var/www/matomo y de la base de datos.
+## 12 Verificación y mantenimiento
 
-Notas rápidas:
-- Reemplazar `example.com`, `ContraseñaSegura`, `php_socket` por valores reales.
-- Si usa Apache: adaptar configuración a Apache + PHP-FPM o mod_php.
-- Si hay errores 502, verificar que PHP-FPM esté corriendo y que el socket/mapeo en Nginx coincida.
+- **Acceso al panel de Matomo**  
+  Abrir el navegador y entrar en la URL configurada (`http://example.com` o la IP del servidor).  
+  Verificar que el panel carga y que se reciben datos de visitas.
+
+- **Revisión de logs**  
+  - Nginx: `/var/log/nginx/matomo.error.log` y `/var/log/nginx/matomo.access.log`  
+  - Matomo: `/var/www/matomo/tmp/logs/`  
+
+**- **Actualización de Matomo**  
+  Se puede realizar desde la interfaz web o manualmente con el comando:
+    
+  ```bash
+  php /var/www/matomo/console core:update
+  ```    
+
+- **Copias de seguridad periódicas**
+Archivos:
+```bash
+tar -czvf backup_matomo.tar.gz /var/www/matomo
+```
+
+Archivos:
+```bash
+mysqldump -u matomo -p matomo > backup_matomo.sql
+```
 
 Fin.
