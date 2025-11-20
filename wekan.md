@@ -23,31 +23,40 @@ sudo apt install -y curl wget git build-essential
 ## Paso 3: Instalar Node.js y npm
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+source ~/.bashrc
+nvm install 14.21.3
+nvm use 14.21.3
 ```
 
 ## Paso 4: Instalar MongoDB
 
 ```bash
-curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-archive-keyring.gpg
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-sudo apt update
 sudo apt install -y mongodb-org
-sudo systemctl start mongod
+sudo apt install -y mongodb
 sudo systemctl enable mongod
+sudo systemctl start mongod
+
+mongod --version
+mongo --version
 ```
 
 ## Paso 5: Descargar e Instalar Wekan
 
 ```bash
-cd /opt
-sudo git clone https://github.com/wekan/wekan.git
-cd wekan
-sudo npm install
+sudo mkdir -p /opt/wekan
+sudo unzip wekan-8.16-amd64.zip -d /opt/wekan
+cd /opt/wekan/bundle/programs/server
+npm install
 ```
 
 ## Paso 6: Configurar Wekan
+
+Crear usuario de servicio:
+```bash
+sudo adduser --system --no-create-home wekan
+sudo chown -R wekan:wekan /opt/wekan
+```
 
 Crear archivo `.env`:
 
@@ -59,8 +68,9 @@ Agregar:
 
 ```
 MONGO_URL=mongodb://localhost:27017/wekan
-ROOT_URL=http://localhost:3000
+ROOT_URL=http://<tu-IP>:3000
 PORT=3000
+NODE_ENV=production
 ```
 
 ## Paso 7: Iniciar Wekan
@@ -69,4 +79,48 @@ PORT=3000
 sudo npm start
 ```
 
-Acceder en: `http://localhost:3000`
+## Paso 8: Configurar Wekan como servicio systemd
+
+Crear archivo systemd:
+
+```bash
+sudo nano /etc/systemd/system/wekan.service
+```
+
+Agregar:
+```bash
+[Unit]
+Description=Wekan Kanban Server
+After=network.target mongod.service
+
+[Service]
+Type=simple
+User=wekan
+Group=wekan
+WorkingDirectory=/opt/wekan/bundle
+
+ExecStart=/usr/bin/node main.js
+
+Environment="PORT=3000"
+Environment="ROOT_URL=http://<tu-IP>:3000"
+Environment="MONGO_URL=mongodb://localhost:27017/wekan"
+Environment="NODE_ENV=production"
+
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=wekan
+
+[Install]
+WantedBy=multi-user.target
+```
+Ejecutamos:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable wekan
+sudo systemctl start wekan
+sudo systemctl status wekan
+```
+
+Acceder en: `http://<tu-IP>:3000`
