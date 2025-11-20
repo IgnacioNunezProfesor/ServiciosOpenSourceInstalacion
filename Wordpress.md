@@ -54,8 +54,9 @@ EXIT;
 cd /tmp
 wget https://wordpress.org/latest.tar.gz
 tar -xzf latest.tar.gz
+sudo rm -rf /var/www/html/*
 sudo cp -r wordpress /var/www/html/
-sudo chown -R www-data:www-data /var/www/html/wordpress
+sudo chown -R www-data:www-data /var/www/html/
 ```
 
 ## 5. Configurar WordPress
