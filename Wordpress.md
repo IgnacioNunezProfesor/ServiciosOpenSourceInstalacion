@@ -65,6 +65,7 @@ sudo chown -R www-data:www-data /var/www/html/
 cd /var/www/html/wordpress
 sudo cp wp-config-sample.php wp-config.php
 sudo nano wp-config.php
+sudo chmod 640 /var/www/html/wp-config.php
 ```
 
 Editar con los datos de la base de datos creada.
