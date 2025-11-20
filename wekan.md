@@ -52,6 +52,12 @@ npm install
 
 ## Paso 6: Configurar Wekan
 
+Crear usuario de servicio:
+```bash
+sudo adduser --system --no-create-home wekan
+sudo chown -R wekan:wekan /opt/wekan
+```
+
 Crear archivo `.env`:
 
 ```bash
