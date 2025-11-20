@@ -44,10 +44,10 @@ mongo --version
 ## Paso 5: Descargar e Instalar Wekan
 
 ```bash
-cd /opt
-sudo git clone https://github.com/wekan/wekan.git
-cd wekan
-sudo npm install
+sudo mkdir -p /opt/wekan
+sudo unzip wekan-8.16-amd64.zip -d /opt/wekan
+cd /opt/wekan/bundle/programs/server
+npm install
 ```
 
 ## Paso 6: Configurar Wekan
