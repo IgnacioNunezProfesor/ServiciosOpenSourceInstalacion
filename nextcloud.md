@@ -76,7 +76,7 @@ Crear archivo de sitio Apache (`/etc/apache2/sites-available/nextcloud.conf`):
         <Directory /var/www/nextcloud/>
             Require all granted
             AllowOverride All
-            Options FollowSymlinks MultiViews
+            Options FollowSymlinks
             <IfModule mod_dav.c>
                 Dav off
             </IfModule>
