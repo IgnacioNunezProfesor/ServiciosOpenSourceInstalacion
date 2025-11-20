@@ -35,6 +35,7 @@ Instalar `curl`, `nginx`, `mysql-server` (o usar SQLite para pruebas), y herrami
 ```bash
 sudo apt install -y nginx curl git build-essential
 sudo apt install -y mysql-server # opcional: para usar MySQL
+sudo mysql_secure_installation
 ```
 
 Si vas a usar MySQL/MariaDB, asegúrate de configurarlo y crear la base de datos/usuario para Ghost (se muestra más abajo si eliges MySQL).
