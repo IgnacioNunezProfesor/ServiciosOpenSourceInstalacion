@@ -59,8 +59,9 @@ sudo php artisan migrate --seed --force
 Ajustar permisos:
 ```bash
 sudo chown -R www-data:www-data /var/www/bookstack
-sudo find /var/www/bookstack -type f -exec chmod 644 {} \;
-sudo find /var/www/bookstack -type d -exec chmod 755 {} \;
+sudo chmod 640 /var/www/bookstack/.env
+sudo find /var/www/bookstack -type f -exec chmod 640 {} \;
+sudo find /var/www/bookstack -type d -exec chmod 750 {} \;
 ```
 
 ## 5) Configurar Nginx (ejemplo)
