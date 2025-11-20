@@ -62,8 +62,9 @@ Agregar:
 
 ```
 MONGO_URL=mongodb://localhost:27017/wekan
-ROOT_URL=http://localhost:3000
+ROOT_URL=http://<tu-IP>:3000
 PORT=3000
+NODE_ENV=production
 ```
 
 ## Paso 7: Iniciar Wekan
