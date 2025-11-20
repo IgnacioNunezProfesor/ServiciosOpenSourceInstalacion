@@ -122,7 +122,7 @@ sudo -u www-data php /var/www/nextcloud/occ maintenance:install \
 Instalar Certbot y obtener certificado:
 ```bash
 sudo apt install -y certbot python3-certbot-apache
-sudo certbot --apache -d your.domain.tld
+sudo certbot --apache -d your.domain.tld --redirect
 ```
 Verificar renovación: `sudo certbot renew --dry-run`
 
