@@ -36,8 +36,8 @@ sudo mkdir -p /var/www
 cd /var/www
 sudo git clone https://github.com/BookStackApp/BookStack.git bookstack
 cd bookstack
-sudo composer install --no-dev --optimize-autoloader
 sudo cp .env.example .env
+sudo composer install --no-dev --optimize-autoloader
 ```
 
 Editar `.env` (APP_URL, DB_CONNECTION, DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD). Ejemplo:
@@ -96,6 +96,7 @@ server {
 ```
 Habilitar y recargar:
 ```bash
+sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/bookstack /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
