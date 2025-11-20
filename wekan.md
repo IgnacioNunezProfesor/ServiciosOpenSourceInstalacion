@@ -79,4 +79,48 @@ NODE_ENV=production
 sudo npm start
 ```
 
-Acceder en: `http://localhost:3000`
+## Paso 8: Configurar Wekan como servicio systemd
+
+Crear archivo systemd:
+
+```bash
+sudo nano /etc/systemd/system/wekan.service
+```
+
+Agregar:
+```bash
+[Unit]
+Description=Wekan Kanban Server
+After=network.target mongod.service
+
+[Service]
+Type=simple
+User=wekan
+Group=wekan
+WorkingDirectory=/opt/wekan/bundle
+
+ExecStart=/usr/bin/node main.js
+
+Environment="PORT=8081"
+Environment="ROOT_URL=http://<tu-IP>:3000"
+Environment="MONGO_URL=mongodb://localhost:27017/wekan"
+Environment="NODE_ENV=production"
+
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=wekan
+
+[Install]
+WantedBy=multi-user.target
+```
+Ejecutamos:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable wekan
+sudo systemctl start wekan
+sudo systemctl status wekan
+```
+
+Acceder en: `http://<tu-IP>:3000`
