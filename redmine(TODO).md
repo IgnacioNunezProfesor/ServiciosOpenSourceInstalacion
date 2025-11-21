@@ -71,7 +71,9 @@ production:
 ## 6. Instalar gemas y configurar la base de datos
 ```bash
 gem install bundler
+rbenv rehash
 bundle config set --local without 'development test'
+bundle install
 bundle install
 bundle exec rake generate_secret_token
 RAILS_ENV=production bundle exec rake db:migrate
