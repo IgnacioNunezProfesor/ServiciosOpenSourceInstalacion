@@ -81,9 +81,21 @@ RAILS_ENV=production bundle exec rake redmine:load_default_data
 
 ## 7. Configurar Passenger y Nginx
 ```bash
-sudo apt install -y nginx passenger
-gem install passenger
-sudo passenger-install-nginx-module
+sudo apt install -y apache2 libapache2-mod-passenger
+sudo nano /etc/apache2/sites-available/redmine.conf
+Contenido:
+<VirtualHost *:80>
+    ServerName redmine.local
+    DocumentRoot /opt/redmine/public
+    <Directory /opt/redmine/public>
+        AllowOverride all
+        Options -MultiViews
+        Require all granted
+    </Directory>
+</VirtualHost>
+Activación:
+sudo a2ensite redmine.conf
+sudo systemctl restart apache2
 ```
 
 ## 8. Iniciar servicios
