@@ -49,7 +49,8 @@ cd /opt
 sudo wget https://www.redmine.org/releases/redmine-5.1.1.tar.gz
 sudo tar xvf redmine-5.1.1.tar.gz
 sudo mv redmine-5.1.1 redmine
-sudo chown -R $USER:$USER redmine
+sudo chown -R $USER:$USER /opt/redmine
+sudo chown -R www-data:www-data /opt/redmine
 ```
 
 ## 5. Configurar Redmine
