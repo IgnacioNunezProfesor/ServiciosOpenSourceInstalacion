@@ -49,8 +49,7 @@ cd /opt
 sudo wget https://www.redmine.org/releases/redmine-5.1.1.tar.gz
 sudo tar xvf redmine-5.1.1.tar.gz
 sudo mv redmine-5.1.1 redmine
-sudo chown -R $USER:$USER /opt/redmine
-sudo chown -R www-data:www-data /opt/redmine
+sudo chown -R $USER:$USER redmine
 ```
 
 ## 5. Configurar Redmine
@@ -72,9 +71,7 @@ production:
 ## 6. Instalar gemas y configurar la base de datos
 ```bash
 gem install bundler
-rbenv rehash
-bundle config set --local without 'development test'
-bundle install
+bundle install --without development test
 bundle exec rake generate_secret_token
 RAILS_ENV=production bundle exec rake db:migrate
 RAILS_ENV=production bundle exec rake redmine:load_default_data
@@ -82,37 +79,18 @@ RAILS_ENV=production bundle exec rake redmine:load_default_data
 
 ## 7. Configurar Passenger y Nginx
 ```bash
-sudo apt install -y apache2 libapache2-mod-passenger
-sudo nano /etc/apache2/sites-available/redmine.conf
-Contenido:
-<VirtualHost *:80>
-    ServerName redmine.local
-    DocumentRoot /opt/redmine/public
-    <Directory /opt/redmine/public>
-        AllowOverride all
-        Options -MultiViews
-        Require all granted
-    </Directory>
-</VirtualHost>
-Activación:
-sudo a2ensite redmine.conf
-sudo systemctl restart apache2
-```
-## 8. Configuración Firewall
-```bash
-sudo ufw allow 80
-sudo ufw allow 443
-sudo ufw enable
-sudo ufw status
+sudo apt install -y nginx passenger
+gem install passenger
+sudo passenger-install-nginx-module
 ```
 
-## 9. Iniciar servicios
+## 8. Iniciar servicios
 ```bash
 sudo systemctl start nginx
 sudo systemctl enable nginx
 ```
 
-## 10. Acceder a Redmine
+## 9. Acceder a Redmine
 - Abrir navegador web
 - Acceder a http://localhost
 - Usuario por defecto: admin
