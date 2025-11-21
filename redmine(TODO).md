@@ -13,8 +13,23 @@ sudo apt upgrade -y
 
 ## 2. Instalar dependencias
 ```bash
-sudo apt install -y ruby ruby-dev build-essential libmysqlclient-dev imagemagick libmagickwand-dev
-sudo apt install -y mysql-server mysql-client
+sudo apt install -y build-essential libssl-dev libreadline-dev zlib1g-dev \
+libsqlite3-dev libxml2-dev libxslt1-dev libffi-dev git curl \
+libmysqlclient-dev imagemagick libmagickwand-dev mysql-server mysql-client
+
+# Instalar rbenv (gestor Ruby)
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+source ~/.bashrc
+
+# Instalar ruby-build
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+
+# Instalar Ruby compatible con Redmine
+rbenv install 3.1.3
+rbenv global 3.1.3
+rbenv rehash
 ```
 
 ## 3. Configurar MySQL
