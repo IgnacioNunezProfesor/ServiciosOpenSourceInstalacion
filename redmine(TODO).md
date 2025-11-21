@@ -99,14 +99,21 @@ Activación:
 sudo a2ensite redmine.conf
 sudo systemctl restart apache2
 ```
+## 8. Configurar Firewall
+```bash
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw enable
+sudo ufw status
+```
 
-## 8. Iniciar servicios
+## 9. Iniciar servicios
 ```bash
 sudo systemctl start nginx
 sudo systemctl enable nginx
 ```
 
-## 9. Acceder a Redmine
+## 10. Acceder a Redmine
 - Abrir navegador web
 - Acceder a http://localhost
 - Usuario por defecto: admin
