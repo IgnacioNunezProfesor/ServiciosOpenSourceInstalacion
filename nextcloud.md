@@ -126,7 +126,9 @@ sudo -u www-data php /var/www/nextcloud/occ maintenance:install \
 ## 8) Activar HTTPS (Certbot)
 Instalar Certbot y obtener certificado:
 ```bash
-sudo apt install -y certbot python3-certbot-apache
+sudo snap install core; sudo snap refresh core
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot --apache -d your.domain.tld
 ```
 Verificar renovación: `sudo certbot renew --dry-run`
