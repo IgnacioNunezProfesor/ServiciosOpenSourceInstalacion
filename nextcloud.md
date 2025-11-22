@@ -117,10 +117,11 @@ Abrir en navegador http://your.domain.tld y completar:
 - Poner datos de DB (nextcloud / ncuser / TuPasswordSegura)
 O usar occ (desde /var/www/nextcloud):
 ```bash
-sudo -u www-data php /var/www/nextcloud/occ maintenance:install \
-    --admin-user=admin --admin-pass='AdminPass' \
-    --database='mysql' --database-name='nextcloud' \
-    --database-user='ncuser' --database-pass='TuPasswordSegura'
+cd /var/www/nextcloud
+sudo -u www-data php occ maintenance:install \
+  --admin-user=admin --admin-pass='AdminPass' \
+  --database='mysql' --database-name='nextcloud' \
+  --database-user='ncuser' --database-pass='TuPasswordSegura'
 ```
 
 ## 8) Activar HTTPS (Certbot)
