@@ -29,7 +29,7 @@ sudo apt install -y php8.3-fpm php8.3-cli php8.3-mysql php8.3-xml php8.3-gd \
 ```
 Habilitar módulos de Apache:
 ```bash
-sudo a2enmod proxy_fcgi setenvif rewrite headers env dir mime ssl
+sudo a2enmod proxy proxy_fcgi setenvif rewrite headers env dir mime ssl
 sudo systemctl restart apache2
 ```
 
