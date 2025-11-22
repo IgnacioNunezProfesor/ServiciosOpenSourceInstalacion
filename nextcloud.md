@@ -37,10 +37,10 @@ sudo systemctl restart apache2
 Ejecutar el asistente de seguridad:
 ```bash
 sudo mysql_secure_installation
+sudo mysql -u root -p
 ```
 Crear la base de datos y usuario (reemplazar contraseña segura):
 ```sql
-sudo mysql -u root -p
 CREATE DATABASE nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE USER 'ncuser'@'localhost' IDENTIFIED BY 'TuPasswordSegura';
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'ncuser'@'localhost';
