@@ -83,6 +83,10 @@ Crear archivo de sitio Apache (`/etc/apache2/sites-available/nextcloud.conf`):
             </IfModule>
         </Directory>
 
+        <FilesMatch "\.php$">
+            SetHandler "proxy:unix:/run/php/php8.3-fpm.sock|fcgi://localhost/"
+        </FilesMatch>
+
         ErrorLog ${APACHE_LOG_DIR}/nextcloud_error.log
         CustomLog ${APACHE_LOG_DIR}/nextcloud_access.log combined
 </VirtualHost>
