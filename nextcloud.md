@@ -61,7 +61,8 @@ Instalar acl (recomendado) y ajustar permisos:
 ```bash
 sudo apt install -y acl
 sudo chown -R www-data:www-data /var/www/nextcloud
-sudo chmod -R 750 /var/www/nextcloud
+sudo find /var/www/nextcloud/ -type d -exec chmod 755 {} \;
+sudo find /var/www/nextcloud/ -type f -exec chmod 640 {} \;
 # Opcional (mejor para despliegues multiusuario):
 sudo setfacl -R -m u:www-data:rwx -m u:$USER:rwx /var/www/nextcloud
 sudo setfacl -dR -m u:www-data:rwx -m u:$USER:rwx /var/www/nextcloud
