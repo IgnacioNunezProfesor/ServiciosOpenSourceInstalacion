@@ -33,7 +33,7 @@ sudo apt install wget apt-transport-https gnupg2 -y
 ### 3. Añadir repositorio de Zammad
 ```bash
 wget -qO- https://dl.packager.io/srv/zammad/zammad/key | sudo apt-key add -
-sudo add-apt-repository "deb https://dl.packager.io/srv/zammad/zammad/stable/ubuntu/24.04 /"
+echo "deb [signed-by=/usr/share/keyrings/zammad.gpg] https://dl.packager.io/srv/zammad/zammad/stable/ubuntu/24.04 main" | sudo tee /etc/apt/sources.list.d/zammad.list
 ```
 
 ### 4. Instalar Zammad
