@@ -108,6 +108,7 @@ Nota: usa contraseñas seguras y, si procede, restringe acceso por host.
     sudo a2ensite glpi.conf
     sudo a2enmod rewrite
     sudo systemctl reload apache2
+    sudo systemctl restart apache2
     ```
 
 ---
