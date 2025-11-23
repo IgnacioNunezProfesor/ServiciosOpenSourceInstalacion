@@ -39,6 +39,7 @@ Esta documentación describe los pasos para instalar y configurar GLPI (Gestión
 3. Reiniciar Apache tras la instalación:
     ```
     sudo systemctl restart apache2
+    sudo a2enmod php*
     ```
 
 ---
