@@ -51,34 +51,31 @@ sudo systemctl status mongod --no-pager
 ```
 
 ## Paso 5: Descargar e Instalar Wekan
+### Instalación recomendada de Wekan (Snap)
+### Snap instala WeKan como un servicio gestionado y con actualizaciones automáticas.
 
 ```bash
-cd /opt
-sudo git clone https://github.com/wekan/wekan.git
-cd wekan
-sudo npm install
+sudo snap install wekan --channel=latest/candidate
 ```
 
 ## Paso 6: Configurar Wekan
-
-Crear archivo `.env`:
+### Configurar URL y puerto (ejemplo)
 
 ```bash
-sudo nano .env
+sudo snap set wekan root-url="http://TU_IP_O_DOMINIO"
 ```
 
-Agregar:
+### Para servir en puerto 80 (HTTP) (si quieres usar 80 en lugar de 3000)
 
-```
-MONGO_URL=mongodb://localhost:27017/wekan
-ROOT_URL=http://localhost:3000
-PORT=3000
+```bash
+sudo snap set wekan port='80'
 ```
 
 ## Paso 7: Iniciar Wekan
+### Comprobar estado del servicio snap
 
 ```bash
-sudo npm start
+sudo snap services wekan
 ```
 
 Acceder en: `http://localhost:3000`
