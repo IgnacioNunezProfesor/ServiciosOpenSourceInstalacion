@@ -21,10 +21,15 @@ sudo apt install -y curl wget git build-essential gnupg2 ca-certificates lsb-rel
 ```
 
 ## Paso 3: Instalar Node.js y npm
+### Instalación de Node.js (OPCIONAL — sólo si vas a compilar Wekan manualmente)
+### Si vas a instalar Wekan mediante Snap, puedes omitir este paso.
+### Para instalar Node.js 20:
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
+node -v
+npm -v
 ```
 
 ## Paso 4: Instalar MongoDB
