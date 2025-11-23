@@ -17,7 +17,7 @@ sudo apt upgrade -y
 ## Paso 2: Instalar Dependencias
 
 ```bash
-sudo apt install -y curl wget git build-essential
+sudo apt install -y curl wget git build-essential gnupg2 ca-certificates lsb-release snapd
 ```
 
 ## Paso 3: Instalar Node.js y npm
