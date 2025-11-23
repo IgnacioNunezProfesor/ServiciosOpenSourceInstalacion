@@ -53,6 +53,7 @@ sudo systemctl enable zammad
 ### 6. Verificar instalación
 ```bash
 sudo systemctl status zammad
+ss -tulpn | grep 3000
 ```
 
 ### 7. Acceder a Zammad
