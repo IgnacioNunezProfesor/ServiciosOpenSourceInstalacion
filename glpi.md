@@ -93,6 +93,7 @@ Nota: usa contraseñas seguras y, si procede, restringe acceso por host.
          ServerName ejemplo.com
          DocumentRoot /var/www/html/glpi
          <Directory /var/www/html/glpi>
+              DirectoryIndex index.php
               AllowOverride All
               Require all granted
          </Directory>
