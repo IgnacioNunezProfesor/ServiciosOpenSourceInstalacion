@@ -70,20 +70,24 @@ sudo setfacl -dR -m u:www-data:rwx -m u:$USER:rwx /var/www/nextcloud
 Crear archivo de sitio Apache (`/etc/apache2/sites-available/nextcloud.conf`):
 ```apache
 <VirtualHost *:80>
-        ServerName your.domain.tld
-        DocumentRoot /var/www/nextcloud
+    ServerName your.domain.tld
+    DocumentRoot /var/www/nextcloud
 
-        <Directory /var/www/nextcloud/>
-            Require all granted
-            AllowOverride All
-            Options FollowSymlinks MultiViews
-            <IfModule mod_dav.c>
-                Dav off
-            </IfModule>
-        </Directory>
+    <Directory /var/www/nextcloud/>
+        Require all granted
+        AllowOverride All
+        Options FollowSymlinks MultiViews
+        <IfModule mod_dav.c>
+            Dav off
+        </IfModule>
+    </Directory>
 
-        ErrorLog ${APACHE_LOG_DIR}/nextcloud_error.log
-        CustomLog ${APACHE_LOG_DIR}/nextcloud_access.log combined
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/run/php/php8.3-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+
+    ErrorLog ${APACHE_LOG_DIR}/nextcloud_error.log
+    CustomLog ${APACHE_LOG_DIR}/nextcloud_access.log combined
 </VirtualHost>
 ```
 Habilitar sitio y reiniciar:
