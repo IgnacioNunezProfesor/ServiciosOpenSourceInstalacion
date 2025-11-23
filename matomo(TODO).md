@@ -145,7 +145,19 @@ sudo ufw allow 'Nginx Full'
 sudo ufw enable
 ```
 
-## 12) Verificación y mantenimiento
+## 12) Optimización de base de datos
+Editar configuración de MariaDB:
+
+```bash
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+```
+Reiniciar:
+
+```bash
+sudo systemctl restart mariadb
+```
+
+## 13) Verificación y mantenimiento
 - Acceder al panel de Matomo y comprobar recepción de datos.
 - Logs: /var/log/nginx/, /var/www/matomo/tmp/logs/
 - Actualizar Matomo periódicamente desde la interfaz o manualmente.
