@@ -115,7 +115,9 @@ Si vas a usar MySQL, crea la base de datos y usuario:
 ```bash
 sudo mysql -u root -p
 
-CREATE DATABASE ghostdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE ghostdb
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_general_ci;
 CREATE USER 'ghostuser'@'localhost' IDENTIFIED BY 'tu_password_segura';
 GRANT ALL PRIVILEGES ON ghostdb.* TO 'ghostuser'@'localhost';
 FLUSH PRIVILEGES;
