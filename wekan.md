@@ -65,8 +65,17 @@ ROOT_URL=http://localhost:8080
 PORT=8080
 MAIL_URL=smtp://localhost
 ```
+## Paso 7: ACTIVAR REPLICASET
 
-## Paso 7: Iniciar Wekan
+```bash
+sudo systemctl stop mongod
+sudo mongod --dbpath /var/lib/mongodb --replSet rs0 --bind_ip_all &
+sleep 5
+mongosh --eval "rs.initiate()"
+sudo systemctl start mongod
+```
+
+## Paso 8: Iniciar Wekan
 
 ```bash
 sudo npm start
