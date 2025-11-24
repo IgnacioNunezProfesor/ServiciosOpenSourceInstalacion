@@ -59,10 +59,11 @@ sudo nano .env
 
 Agregar:
 
-```
-MONGO_URL=mongodb://localhost:27017/wekan
-ROOT_URL=http://localhost:3000
-PORT=3000
+```MONGO_URL=mongodb://localhost:27017/wekan
+MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=rs0
+ROOT_URL=http://localhost:8080
+PORT=8080
+MAIL_URL=smtp://localhost
 ```
 
 ## Paso 7: Iniciar Wekan
