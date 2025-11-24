@@ -94,10 +94,14 @@ sudo git clone https://github.com/snipe/snipe-it.git /var/www/snipe-it
 cd /var/www/snipe-it
 sudo -u www-data composer install --no-dev --prefer-dist -o
 sudo -u www-data cp .env.example .env
+sudo chown -R www-data:www-data /var/www/snipe-it
+sudo chmod -R 755 /var/www/snipe-it
 ```
 
 Editar `.env`:
 ```
+APP_ENV=production
+APP_DEBUG=false
 APP_URL=http://tu-dominio-o-ip
 DB_DATABASE=snipeit
 DB_USERNAME=snipeuser
@@ -131,11 +135,16 @@ sudo chmod -R ug+rwx storage bootstrap/cache
 ### Apache
 
 ```apache
-DocumentRoot /var/www/snipe-it/public
-<Directory /var/www/snipe-it/public>
-    Require all granted
-    AllowOverride All
-</Directory>
+<VirtualHost *:80>
+    ServerName dominio.com/ip
+    DocumentRoot /var/www/snipe-it/public
+    <Directory /var/www/snipe-it/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/snipeit_error.log
+    CustomLog ${APACHE_LOG_DIR}/snipeit_access.log combined
+</VirtualHost>
 ```
 
 ```bash
