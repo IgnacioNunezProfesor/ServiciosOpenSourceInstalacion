@@ -173,7 +173,7 @@ Usando Certbot:
 
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d tu_dominio.com -d www.tu_dominio.com
+sudo certbot --nginx --redirect -d tu_dominio.com -d www.tu_dominio.com
 ```
 
 ## 11. Administrar el servicio Ghost
