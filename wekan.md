@@ -42,9 +42,11 @@ sudo systemctl enable mongod
 
 ```bash
 cd /opt
-sudo git clone https://github.com/wekan/wekan.git
+sudo wget https://releases.wekan.team/wekan-latest.zip
+sudo apt install -y unzip
+sudo unzip wekan-latest.zip -d wekan
 cd wekan
-sudo npm install
+sudo npm install --production
 ```
 
 ## Paso 6: Configurar Wekan
