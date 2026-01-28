@@ -76,6 +76,8 @@ rbenv rehash
 bundle config set --local without 'development test'
 bundle install
 bundle install
+sudo apt install -y libssl-dev zlib1g-dev libpq-dev
+bundle install --without development test
 bundle exec rake generate_secret_token
 RAILS_ENV=production bundle exec rake db:migrate
 RAILS_ENV=production bundle exec rake redmine:load_default_data
@@ -86,6 +88,9 @@ RAILS_ENV=production bundle exec rake redmine:load_default_data
 sudo apt install -y apache2 libapache2-mod-passenger
 sudo nano /etc/apache2/sites-available/redmine.conf
 Contenido:
+sudo apt install -y libnginx-mod-http-passenger
+gem install passenger
+sudo nano /etc/nginx/sites-available/redmine.conf
 <VirtualHost *:80>
     ServerName redmine.local
     DocumentRoot /opt/redmine/public
