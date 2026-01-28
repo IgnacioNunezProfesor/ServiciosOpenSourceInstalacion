@@ -26,6 +26,10 @@ sudo apt install -y curl wget git build-essential gnupg2 ca-certificates lsb-rel
 ### Para instalar Node.js 20:
 
 ```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+source ~/.bashrc
+nvm install 14.21.3
+nvm use 14.21.3
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt install -y nodejs
 node -v
@@ -36,6 +40,13 @@ npm -v
 ### Añadir clave GPG y repo oficial de MongoDB (Ubuntu 24.04 "noble")
 
 ```bash
+sudo apt install -y mongodb-org
+sudo apt install -y mongodb
+sudo systemctl enable mongod
+sudo systemctl start mongod
+
+mongod --version
+mongo --version
 curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc \
   | gpg --dearmor \
   | sudo tee /usr/share/keyrings/mongodb-archive-keyring.gpg > /dev/null
@@ -55,6 +66,21 @@ sudo systemctl status mongod --no-pager
 ### Snap instala WeKan como un servicio gestionado y con actualizaciones automáticas.
 
 ```bash
+sudo mkdir -p /opt/wekan
+sudo unzip wekan-8.16-amd64.zip -d /opt/wekan
+cd /opt/wekan/bundle/programs/server
+npm install
+```
+
+## Paso 6: Configurar Wekan
+
+Crear usuario de servicio:
+```bash
+sudo adduser --system --no-create-home wekan
+sudo chown -R wekan:wekan /opt/wekan
+```
+
+Crear archivo `.env`:
 sudo snap install wekan --channel=latest/candidate
 cd /opt
 sudo wget https://releases.wekan.team/wekan-latest.zip
@@ -73,6 +99,11 @@ sudo snap set wekan root-url="http://TU_IP_O_DOMINIO"
 
 ### Para servir en puerto 80 (HTTP) (si quieres usar 80 en lugar de 3000)
 
+```
+MONGO_URL=mongodb://localhost:27017/wekan
+ROOT_URL=http://<tu-IP>:3000
+PORT=3000
+NODE_ENV=production
 ```bash
 sudo snap set wekan port='80'
 ```
@@ -84,6 +115,18 @@ sudo snap set wekan port='80'
 sudo snap services wekan
 ```
 
+## Paso 8: Configurar Wekan como servicio systemd
+
+Crear archivo systemd:
+
+```bash
+sudo nano /etc/systemd/system/wekan.service
+```
+
+Agregar:
+```bash
+[Unit]
+Description=Wekan Kanban Server
 Acceder en: `http://localhost:3000`
 
 ## Paso 8: Verificación y firewall
@@ -136,6 +179,34 @@ After=network.target mongod.service
 [Service]
 Type=simple
 User=wekan
+Group=wekan
+WorkingDirectory=/opt/wekan/bundle
+
+ExecStart=/usr/bin/node main.js
+
+Environment="PORT=3000"
+Environment="ROOT_URL=http://<tu-IP>:3000"
+Environment="MONGO_URL=mongodb://localhost:27017/wekan"
+Environment="NODE_ENV=production"
+
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=wekan
+
+[Install]
+WantedBy=multi-user.target
+```
+Ejecutamos:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable wekan
+sudo systemctl start wekan
+sudo systemctl status wekan
+```
+
+Acceder en: `http://<tu-IP>:3000`
 EnvironmentFile=/opt/wekan/.env
 ExecStart=/usr/bin/node /opt/wekan/main.js
 Restart=always
