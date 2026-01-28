@@ -8,6 +8,10 @@ Resumen: esta guía instala Matomo usando Nginx + PHP-FPM + MariaDB en Ubuntu 24
 - Usuario con privilegios sudo.
 - Dominio apuntando al servidor (opcional para HTTPS).
 - Puerto 80/443 accesibles (UFW/Cloud rules).
+```bash
+sudo apt install -y chrony
+sudo systemctl enable chrony --now
+```
 
 ## 2 Actualizar sistema
 ```bash
@@ -16,9 +20,16 @@ sudo apt update && sudo apt upgrade -y
 
 ## 3 Instalar webserver, PHP y extensiones requeridas
 Instala la versión de PHP disponible en repositorios (o específ. cambiando `php` por `php8.x`).
+## 3) Instalar webserver, PHP y extensiones requeridas
+Instala la versión de PHP disponible en repositorios (o específ. cambiando `php` por `php8.2`).
 
 ```bash
-sudo apt install -y nginx mariadb-server php php-fpm php-mysql php-xml php-cli php-gd php-curl php-mbstring php-zip php-intl php-bcmath php-opcache unzip wget
+sudo apt install -y nginx mariadb-server php8.2 php8.2-fpm php8.2-mysql php8.2-xml php8.2-cli php8.2-gd php8.2-curl php8.2-mbstring php8.2-zip php8.2-intl php8.2-bcmath php8.2-opcache unzip wget
+Instalar la versión de PHP disponible en repositorios (o específ. cambiando `php` por `php8.x`).
+
+```bash
+sudo apt install -y nginx mariadb-server php8.2 php8.2-fpm php8.2-mysql php8.2-xml php8.2-cli php8.2-gd php8.2-curl php8.2-mbstring php8.2-zip php8.2-intl php8.2-bcmath php8.2-opcache unzip wget
+
 ```
 
 Verificar socket de PHP-FPM (necesario para la configuración de Nginx):
@@ -30,11 +41,14 @@ Apuntar al socket correcto en la configuración de Nginx (ver sección de Nginx)
 ## 4 Configurar MariaDB (crear base de datos y usuario)
 Acceder a MariaDB y crear DB y usuario seguros:
 ```bash
+#Ejecutar el script de seguridad
+Ejecutar el script de seguridad:
+
 sudo mysql -u root
 
 # dentro del cliente MariaDB:
 CREATE DATABASE matomo CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-CREATE USER 'matomo'@'localhost' IDENTIFIED BY 'ContraseñaSegura';
+CREATE USER 'matomo'@'localhost' IDENTIFIED BY 'Matomo223344_*';
 GRANT ALL PRIVILEGES ON matomo.* TO 'matomo'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
@@ -113,10 +127,11 @@ sudo nano /etc/php/8.x/fpm/php.ini   # ajustar según la versión instalada
 # memory_limit = 512M
 # max_execution_time = 300
 # upload_max_filesize = 20M
+# post_max_size = 20M
 ```
 Luego reiniciar PHP-FPM:
 ```bash
-sudo systemctl restart php8.x-fpm   # ajustar versión
+sudo systemctl restart php8.2-fpm   # ajustar versión
 ```
 
 ## 8 Ejecutar el instalador web de Matomo
@@ -153,6 +168,23 @@ sudo ufw enable
 ```
 
 ## 12 Verificación y mantenimiento
+## 12) Optimización de base de datos
+Editar configuración de MariaDB:
+
+```bash
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+```
+Reiniciar:
+
+```bash
+sudo systemctl restart mariadb
+```
+
+## 13) Verificación y mantenimiento
+- Acceder al panel de Matomo y comprobar recepción de datos.
+- Logs: /var/log/nginx/, /var/www/matomo/tmp/logs/
+- Actualizar Matomo periódicamente desde la interfaz o manualmente.
+- Hacer copias de seguridad de /var/www/matomo y de la base de datos.
 
 - **Acceso al panel de Matomo**  
   Abrir el navegador y entrar en la URL configurada (`http://example.com` o la IP del servidor).  

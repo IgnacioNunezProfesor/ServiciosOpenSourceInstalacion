@@ -34,10 +34,10 @@ EXIT;
 ```bash
 sudo mkdir -p /var/www
 cd /var/www
-sudo git clone https://github.com/BookStackApp/BookStack.git bookstack
+sudo git clone https://github.com/BookStackApp/BookStack.git --branch=release --single-branch bookstack
 cd bookstack
-sudo composer install --no-dev --optimize-autoloader
 sudo cp .env.example .env
+sudo composer install --no-dev --optimize-autoloader
 ```
 
 Editar `.env` (APP_URL, DB_CONNECTION, DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD). Ejemplo:
@@ -59,8 +59,9 @@ sudo php artisan migrate --seed --force
 Ajustar permisos:
 ```bash
 sudo chown -R www-data:www-data /var/www/bookstack
-sudo find /var/www/bookstack -type f -exec chmod 644 {} \;
-sudo find /var/www/bookstack -type d -exec chmod 755 {} \;
+sudo chmod 640 /var/www/bookstack/.env
+sudo find /var/www/bookstack -type f -exec chmod 640 {} \;
+sudo find /var/www/bookstack -type d -exec chmod 750 {} \;
 ```
 
 ## 5) Configurar Nginx (ejemplo)
@@ -96,13 +97,14 @@ server {
 ```
 Habilitar y recargar:
 ```bash
+sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/bookstack /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ## 6) Habilitar HTTPS (Let’s Encrypt)
 ```bash
-sudo certbot --nginx -d tu-dominio.com
+sudo certbot --nginx -d tu-dominio.com -d www.tu-dominio.com
 ```
 
 ## 7) Configurar worker (opcional, recomendado para emails/colas)
