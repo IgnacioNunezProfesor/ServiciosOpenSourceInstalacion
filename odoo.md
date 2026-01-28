@@ -39,6 +39,7 @@ sudo systemctl start postgresql
 sudo systemctl enable postgresql
 sudo systemctl status postgresql
 sudo su - postgres -c "createuser -s odoo"
+sudo -u postgres createuser -d odoo
 ```
 
 ## 7. Instalar Odoo desde GitHub
