@@ -77,7 +77,7 @@ Crear archivo de sitio Apache (`/etc/apache2/sites-available/nextcloud.conf`):
         <Directory /var/www/nextcloud/>
             Require all granted
             AllowOverride All
-            Options FollowSymlinks MultiViews
+            Options FollowSymlinks
             <IfModule mod_dav.c>
                 Dav off
             </IfModule>
@@ -127,6 +127,8 @@ sudo -u www-data php occ maintenance:install \
 ## 8) Activar HTTPS (Certbot)
 Instalar Certbot y obtener certificado:
 ```bash
+sudo apt install -y certbot python3-certbot-apache
+sudo certbot --apache -d your.domain.tld --redirect
 sudo snap install core; sudo snap refresh core
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot

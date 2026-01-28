@@ -24,6 +24,8 @@ sudo apt update && sudo apt upgrade -y
 Es buena práctica ejecutar Ghost con un usuario no root. Se crea el usuario `ghost` y se le da ownership del directorio de trabajo:
 
 ```bash
+sudo mkdir -p /var/www/ghost
+sudo chown $USER:$USER /var/www/ghost
 sudo adduser --system --quiet --group --shell /bin/false ghost
 sudo mkdir -p /var/www/ghost
 sudo chown ghost:ghost /var/www/ghost
@@ -37,15 +39,19 @@ Instalar `curl`, `nginx`, `mysql-server` (o usar SQLite para pruebas), y herrami
 ```bash
 sudo apt install -y nginx curl git build-essential
 sudo apt install -y mysql-server # opcional: para usar MySQL
+sudo mysql_secure_installation
 ```
 
 Si vas a usar MySQL/MariaDB, asegúrate de configurarlo y crear la base de datos/usuario para Ghost (se muestra más abajo si eliges MySQL).
 
 ## 4. Instalar Node.js (versión recomendada)
 
-Ghost requiere una versión compatible de Node.js. Aquí instalamos la última disponble:
+Ghost requiere una versión compatible de Node.js. Aquí instalamos la última disponble pero que sea compatible:
 
 ```bash
+NODE_MAJOR=20
+curl -sL https://deb.nodesource.com/setup_$NODE_MAJOR.x -o nodesource_setup.sh
+bash nodesource_setup.sh
 # Node.js versión recomendada por Ghost (LTS compatible)
 NODE_MAJOR=20
 curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | sudo -E bash -
@@ -142,6 +148,14 @@ server {
     server_name tu_dominio.com www.tu_dominio.com;
 
     location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_pass http://127.0.0.1:2368;
+    }
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
