@@ -123,3 +123,18 @@ Editar php.ini (ruta p. ej. /etc/php/*/apache2/php.ini) y ajustar:
 - date.timezone = "Europe/Madrid" (ajusta a tu zona)
 
 Reiniciar Apache tras cambios:
+
+## 7) Configurar Cron automático para GLPI
+GLPI necesita ejecutar tareas de mantenimiento (notificaciones, acciones automáticas, limpieza, etc.).
+1. Probar el cron manualmente
+```
+sudo -u www-data php /var/www/html/glpi/front/cron.php
+```
+2. Crear la tarea cron ejecución cada 5 minutos
+```
+sudo crontab -u www-data -e
+```
+3. Añadir la siguiente linea al final del archivo.
+```
+*/5 * * * * /usr/bin/php /var/www/html/glpi/front/cron.php
+```
