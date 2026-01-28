@@ -20,7 +20,7 @@ Esta documentación describe los pasos para instalar y configurar GLPI (Gestión
 
 2. Instalar utilidades básicas:
     ```
-    sudo apt install -y wget curl unzip gnupg lsb-release software-properties-common
+    sudo apt install -y wget curl unzip tar gnupg lsb-release software-properties-common
     ```
 
 ---
@@ -39,6 +39,7 @@ Esta documentación describe los pasos para instalar y configurar GLPI (Gestión
 3. Reiniciar Apache tras la instalación:
     ```
     sudo systemctl restart apache2
+    sudo a2enmod php*
     ```
 
 ---
@@ -93,6 +94,7 @@ Nota: usa contraseñas seguras y, si procede, restringe acceso por host.
          ServerName ejemplo.com
          DocumentRoot /var/www/html/glpi
          <Directory /var/www/html/glpi>
+              DirectoryIndex index.php
               AllowOverride All
               Require all granted
          </Directory>
@@ -103,9 +105,11 @@ Nota: usa contraseñas seguras y, si procede, restringe acceso por host.
 
 2. Habilitar el sitio y módulos necesarios:
     ```
+    sudo a2dissite 000-default.conf
     sudo a2ensite glpi.conf
     sudo a2enmod rewrite
     sudo systemctl reload apache2
+    sudo systemctl restart apache2
     ```
 
 ---
@@ -119,3 +123,18 @@ Editar php.ini (ruta p. ej. /etc/php/*/apache2/php.ini) y ajustar:
 - date.timezone = "Europe/Madrid" (ajusta a tu zona)
 
 Reiniciar Apache tras cambios:
+
+## 7) Configurar Cron automático para GLPI
+GLPI necesita ejecutar tareas de mantenimiento (notificaciones, acciones automáticas, limpieza, etc.).
+1. Probar el cron manualmente
+```
+sudo -u www-data php /var/www/html/glpi/front/cron.php
+```
+2. Crear la tarea cron ejecución cada 5 minutos
+```
+sudo crontab -u www-data -e
+```
+3. Añadir la siguiente linea al final del archivo.
+```
+*/5 * * * * /usr/bin/php /var/www/html/glpi/front/cron.php
+```

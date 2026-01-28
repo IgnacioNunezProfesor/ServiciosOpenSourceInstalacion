@@ -26,6 +26,10 @@ Es buena práctica ejecutar Ghost con un usuario no root. Se crea el usuario `gh
 ```bash
 sudo mkdir -p /var/www/ghost
 sudo chown $USER:$USER /var/www/ghost
+sudo adduser --system --quiet --group --shell /bin/false ghost
+sudo mkdir -p /var/www/ghost
+sudo chown ghost:ghost /var/www/ghost
+sudo chmod 775 /var/www/ghost
 ```
 
 ## 3. Instalar dependencias del sistema
@@ -48,8 +52,12 @@ Ghost requiere una versión compatible de Node.js. Aquí instalamos la última d
 NODE_MAJOR=20
 curl -sL https://deb.nodesource.com/setup_$NODE_MAJOR.x -o nodesource_setup.sh
 bash nodesource_setup.sh
+# Node.js versión recomendada por Ghost (LTS compatible)
+NODE_MAJOR=20
+curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | sudo -E bash -
 sudo apt install -y nodejs
 
+# Comprobar versiones
 node -v
 npm -v
 ```
@@ -59,7 +67,7 @@ npm -v
 Ghost CLI facilita la instalación y administración de Ghost.
 
 ```bash
-sudo npm install -g ghost-cli@latest
+sudo npm install -g ghost-cli@latest --unsafe-perm
 ```
 
 Verifica la instalación:
@@ -73,6 +81,7 @@ ghost --version
 Instala Ghost dentro de `/var/www/ghost` ejecutando como el usuario `ghost` (o como tu usuario con permisos sobre el directorio).
 
 ```bash
+sudo chown -R ghost:ghost /var/www/ghost
 sudo -u ghost -H bash
 cd /var/www/ghost
 ```
@@ -112,7 +121,9 @@ Si vas a usar MySQL, crea la base de datos y usuario:
 ```bash
 sudo mysql -u root -p
 
-CREATE DATABASE ghostdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE ghostdb
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_general_ci;
 CREATE USER 'ghostuser'@'localhost' IDENTIFIED BY 'tu_password_segura';
 GRANT ALL PRIVILEGES ON ghostdb.* TO 'ghostuser'@'localhost';
 FLUSH PRIVILEGES;
@@ -145,6 +156,15 @@ server {
         proxy_set_header Connection "upgrade";
         proxy_pass http://127.0.0.1:2368;
     }
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header Host $http_host;
+
+    proxy_redirect off;
+    proxy_pass http://127.0.0.1:2368;
+}
 
     access_log /var/log/nginx/ghost_access.log;
     error_log  /var/log/nginx/ghost_error.log;
@@ -167,7 +187,7 @@ Usando Certbot:
 
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d tu_dominio.com -d www.tu_dominio.com
+sudo certbot --nginx --redirect -d tu_dominio.com -d www.tu_dominio.com
 ```
 
 ## 11. Administrar el servicio Ghost
