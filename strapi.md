@@ -6,7 +6,7 @@ Resumen rápido: guía para instalar Strapi (v4+) en Ubuntu 24.04, desde un ento
 - Ubuntu 24.04
 - Usuario con sudo
 - Puerto 1337 libre (por defecto)
-- Node.js (recomendado LTS 18 o 20)
+- Node.js (solo compatible LTS 20)
 - npm (v9+) o Yarn
 - (Producción) PostgreSQL, Nginx, Certbot, PM2
 
@@ -19,15 +19,15 @@ sudo apt install -y curl git build-essential
 ```
 
 ## 2) Instalar Node.js (recomendado: nvm)
-Instalar nvm y Node LTS (ej. 18):
+Instalar nvm y Node LTS (ej. 20):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 # Cargar nvm (o cerrar/abrir terminal)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-nvm install 18
-nvm use 18
+nvm install 20
+nvm use 20
 node -v
 npm -v
 ```

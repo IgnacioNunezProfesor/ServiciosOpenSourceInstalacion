@@ -29,7 +29,7 @@ sudo apt install -y php8.3-fpm php8.3-cli php8.3-mysql php8.3-xml php8.3-gd \
 ```
 Habilitar módulos de Apache:
 ```bash
-sudo a2enmod proxy_fcgi setenvif rewrite headers env dir mime ssl
+sudo a2enmod proxy proxy_fcgi setenvif rewrite headers env dir mime ssl
 sudo systemctl restart apache2
 ```
 
@@ -37,10 +37,10 @@ sudo systemctl restart apache2
 Ejecutar el asistente de seguridad:
 ```bash
 sudo mysql_secure_installation
+sudo mysql -u root -p
 ```
 Crear la base de datos y usuario (reemplazar contraseña segura):
 ```sql
-sudo mysql -u root -p
 CREATE DATABASE nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE USER 'ncuser'@'localhost' IDENTIFIED BY 'TuPasswordSegura';
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'ncuser'@'localhost';
@@ -61,7 +61,8 @@ Instalar acl (recomendado) y ajustar permisos:
 ```bash
 sudo apt install -y acl
 sudo chown -R www-data:www-data /var/www/nextcloud
-sudo chmod -R 750 /var/www/nextcloud
+sudo find /var/www/nextcloud/ -type d -exec chmod 755 {} \;
+sudo find /var/www/nextcloud/ -type f -exec chmod 640 {} \;
 # Opcional (mejor para despliegues multiusuario):
 sudo setfacl -R -m u:www-data:rwx -m u:$USER:rwx /var/www/nextcloud
 sudo setfacl -dR -m u:www-data:rwx -m u:$USER:rwx /var/www/nextcloud
@@ -70,17 +71,39 @@ sudo setfacl -dR -m u:www-data:rwx -m u:$USER:rwx /var/www/nextcloud
 Crear archivo de sitio Apache (`/etc/apache2/sites-available/nextcloud.conf`):
 ```apache
 <VirtualHost *:80>
+    ServerName your.domain.tld
+    DocumentRoot /var/www/nextcloud
+
+    <Directory /var/www/nextcloud/>
+        Require all granted
+        AllowOverride All
+        Options FollowSymlinks MultiViews
+        <IfModule mod_dav.c>
+            Dav off
+        </IfModule>
+    </Directory>
+
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/run/php/php8.3-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+
+    ErrorLog ${APACHE_LOG_DIR}/nextcloud_error.log
+    CustomLog ${APACHE_LOG_DIR}/nextcloud_access.log combined
         ServerName your.domain.tld
         DocumentRoot /var/www/nextcloud
 
         <Directory /var/www/nextcloud/>
             Require all granted
             AllowOverride All
-            Options FollowSymlinks MultiViews
+            Options FollowSymlinks
             <IfModule mod_dav.c>
                 Dav off
             </IfModule>
         </Directory>
+
+        <FilesMatch "\.php$">
+            SetHandler "proxy:unix:/run/php/php8.3-fpm.sock|fcgi://localhost/"
+        </FilesMatch>
 
         ErrorLog ${APACHE_LOG_DIR}/nextcloud_error.log
         CustomLog ${APACHE_LOG_DIR}/nextcloud_access.log combined
@@ -112,16 +135,21 @@ Abrir en navegador http://your.domain.tld y completar:
 - Poner datos de DB (nextcloud / ncuser / TuPasswordSegura)
 O usar occ (desde /var/www/nextcloud):
 ```bash
-sudo -u www-data php /var/www/nextcloud/occ maintenance:install \
-    --admin-user=admin --admin-pass='AdminPass' \
-    --database='mysql' --database-name='nextcloud' \
-    --database-user='ncuser' --database-pass='TuPasswordSegura'
+cd /var/www/nextcloud
+sudo -u www-data php occ maintenance:install \
+  --admin-user=admin --admin-pass='AdminPass' \
+  --database='mysql' --database-name='nextcloud' \
+  --database-user='ncuser' --database-pass='TuPasswordSegura'
 ```
 
 ## 8) Activar HTTPS (Certbot)
 Instalar Certbot y obtener certificado:
 ```bash
 sudo apt install -y certbot python3-certbot-apache
+sudo certbot --apache -d your.domain.tld --redirect
+sudo snap install core; sudo snap refresh core
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot --apache -d your.domain.tld
 ```
 Verificar renovación: `sudo certbot renew --dry-run`
