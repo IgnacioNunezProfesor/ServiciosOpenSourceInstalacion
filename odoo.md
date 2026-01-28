@@ -13,6 +13,13 @@ sudo apt upgrade -y
 
 ## 2. Instalar dependencias
 ```bash
+sudo apt install -y git python3-pip python3-dev python3-venv python3-wheel 
+python3-setuptools libxslt1-dev libzip-dev libldap2-dev libsasl2-dev 
+libjpeg-dev zlib1g-dev libpq-dev libxml2-dev libtiff5-dev libopenjp2-7-dev 
+liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev libxcb1-dev wkhtmltopdf npm
+
+sudo npm install -g less less-plugin-clean-css
+
 sudo apt install git python3-pip python3-dev python3-venv python3-wheel libxslt1-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libjpeg-dev zlib1g-dev libpq-dev libxml2-dev libxslt1-dev libldap2-dev libtiff5-dev libjpeg8-dev libopenjp2-7-dev liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev libxcb1-dev wget -y
 ```
 ## 3. Instalar nodejs y npm
