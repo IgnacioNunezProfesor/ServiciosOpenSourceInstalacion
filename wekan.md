@@ -26,7 +26,7 @@ sudo apt install -y curl wget git build-essential gnupg2 ca-certificates lsb-rel
 ### Para instalar Node.js 20:
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt install -y nodejs
 node -v
 npm -v
@@ -56,6 +56,12 @@ sudo systemctl status mongod --no-pager
 
 ```bash
 sudo snap install wekan --channel=latest/candidate
+cd /opt
+sudo wget https://releases.wekan.team/wekan-latest.zip
+sudo apt install -y unzip
+sudo unzip wekan-latest.zip -d wekan
+cd wekan
+sudo npm install --production
 ```
 
 ## Paso 6: Configurar Wekan
@@ -101,3 +107,59 @@ sudo ufw allow 443/tcp
 # Acceso:
 ### Si accedes desde la misma máquina: http://localhost:3000 (o http://localhost si configuraste puerto 80)
 ### Desde otra máquina: http://IP_DEL_SERVIDOR:3000  (o http://IP_DEL_SERVIDOR si usas puerto 80)
+```MONGO_URL=mongodb://localhost:27017/wekan
+MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=rs0
+ROOT_URL=http://localhost:8080
+PORT=8080
+MAIL_URL=smtp://localhost
+```
+## Paso 7: ACTIVAR REPLICASET
+
+```bash
+sudo systemctl stop mongod
+sudo mongod --dbpath /var/lib/mongodb --replSet rs0 --bind_ip_all &
+sleep 5
+mongosh --eval "rs.initiate()"
+sudo systemctl start mongod
+```
+
+## Paso 8: Iniciar Wekan
+
+```bash
+sudo nano /etc/systemd/system/wekan.service
+
+Contenido:
+[Unit]
+Description=Wekan Server
+After=network.target mongod.service
+
+[Service]
+Type=simple
+User=wekan
+EnvironmentFile=/opt/wekan/.env
+ExecStart=/usr/bin/node /opt/wekan/main.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+Habilitar:
+sudo systemctl daemon-reload
+sudo systemctl enable --now wekan
+```
+## Paso 9: Configuración mínima de Nginx
+```bash
+server {
+    listen 80;
+    server_name tu_dominio.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+Acceder en: `http://localhost:8080`
